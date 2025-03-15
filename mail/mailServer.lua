@@ -75,15 +75,6 @@ function mailserver.setup()
     mail.setRoot("/")
 end
 
-function mailserver.run()
-    if not fs.exists(mailserver.dir) then
-        mailserver.setup()
-    end
-    while true do
-        mailserver.receiveMail()
-    end
-end
-
 function mailserver.storeMail(email)
     if not mail.isValidEmail(email) then
         error("Invalid email format")
@@ -126,6 +117,15 @@ function mailserver.receiveMail()
     mailserver.storeMail(email)
 
     mail.printEmail(email)
+end
+
+function mailserver.run()
+    if not fs.exists(mailserver.dir) then
+        mailserver.setup()
+    end
+    while true do
+        mailserver.receiveMail()
+    end
 end
 
 return mailserver
