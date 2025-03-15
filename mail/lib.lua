@@ -280,22 +280,4 @@ function MailingLib.fileToMail(filePath)
     return MailingLib.newMailObject(sender, recipient, subject, body)
 end
 
-MailingLib.showDir = {
-    ROOT = MailingLib.root,
-    DIR = MailingLib.dir,
-    INBOX = MailingLib.getInboxPath(),
-    READ = MailingLib.read,
-    UNREAD = MailingLib.unread,
-    CONFIG = MailingLib.configDir,
-    TAG = MailingLib.tagDir,
-    TEMP = MailingLib.temp,
-}
-
--- Function to show all Dir of the Library
-function MailingLib.listDir()
-    for key, value in pairs(MailingLib.showDir) do
-        print(key .. ": " .. value)
-    end
-end
-
 return MailingLib
