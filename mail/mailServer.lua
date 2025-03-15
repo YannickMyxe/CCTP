@@ -1,7 +1,7 @@
 local mail = require "lib" or error("Could not load mail library")
 
 package.path = '../?.lua;' .. package.path
-local fstp = require("CCTP.fstp") or error("Could not load fstp library")
+local fstp = require("fstp") or error("Could not load fstp library")
 
 local mailserver = {}
 
