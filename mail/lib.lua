@@ -16,30 +16,12 @@ MailingLib.configDir    = MailingLib.dir    .. ".config/"
 MailingLib.tagDir       = ".tags/"
 MailingLib.temp         = MailingLib.dir    .. "temp/"
 
-MailingLib.showDir = {
-    ROOT = MailingLib.root,
-    DIR = MailingLib.dir,
-    INBOX = MailingLib.getInboxPath(),
-    READ = MailingLib.read,
-    UNREAD = MailingLib.unread,
-    CONFIG = MailingLib.configDir,
-    TAG = MailingLib.tagDir,
-    TEMP = MailingLib.temp,
-}
-
 MailingLib.serverID = nil
 
 MailingLib.EmailStates = {
     UNREAD = "unread",
     READ = "read",
 }
-
--- Function to show all Dir of the Library
-function MailingLib.listDir()
-    for key, value in pairs(MailingLib.showDir) do
-        print(key .. ": " .. value)
-    end
-end
 
 -- Function to change the root directory
 function MailingLib.setRoot(newRootPath)
@@ -292,6 +274,24 @@ function MailingLib.fileToMail(filePath)
     file.close()
 
     return MailingLib.newMailObject(sender, recipient, subject, body)
+end
+
+MailingLib.showDir = {
+    ROOT = MailingLib.root,
+    DIR = MailingLib.dir,
+    INBOX = MailingLib.getInboxPath(),
+    READ = MailingLib.read,
+    UNREAD = MailingLib.unread,
+    CONFIG = MailingLib.configDir,
+    TAG = MailingLib.tagDir,
+    TEMP = MailingLib.temp,
+}
+
+-- Function to show all Dir of the Library
+function MailingLib.listDir()
+    for key, value in pairs(MailingLib.showDir) do
+        print(key .. ": " .. value)
+    end
 end
 
 return MailingLib
