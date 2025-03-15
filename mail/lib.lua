@@ -84,6 +84,9 @@ function MailingLib.isValidEmail(email)
 end
 
 function MailingLib.getInboxPath(user)
+    if not user then
+        user = MailingLib.getName()
+    end
     return MailingLib.dir .. user .. MailingLib.inbox
 end
 
@@ -249,7 +252,7 @@ function MailingLib.setUnread(path)
 end
 
 function MailingLib.mailToFile(email)
-    print("Transforming E-mail to file: " .. email.subject)
+   
 
     local tempDir = MailingLib.temp
     local fPath = tempDir .. email.subject .. ".mail"
@@ -260,18 +263,19 @@ function MailingLib.mailToFile(email)
     file.write(email.subject .. "\n")
     file.write(email.body)
     file.close()
+    print("Transfored E-mail `" .. email.subject .. "` to file: " .. fPath)
     return fPath
 end
 
 function MailingLib.fileToMail(filePath)
-    print("Transforming file to E-mail: " .. filePath)
-
-    local file = fs.open(filePath, "r") or error("File `" .. filePath .. "` not found")
+        local file = fs.open(filePath, "r") or error("File `" .. filePath .. "` not found")
     local sender = file.readLine()
     local recipient = file.readLine()
     local subject = file.readLine()
     local body = file.readAll()
     file.close()
+
+    print("Transformed file " .. filePath .. " to E-mail.")
 
     return MailingLib.newMailObject(sender, recipient, subject, body)
 end
