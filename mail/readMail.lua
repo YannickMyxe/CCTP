@@ -11,5 +11,5 @@ if not fs.exists(filePath) then
     error("Could not find email at `" .. filePath .. "`;")
 end
 
-local email = mail.readMail(filePath)
+local email = mail.fileToMail(filePath)
 mail.printEmail(email)
