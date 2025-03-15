@@ -1,3 +1,8 @@
+--[[
+    File-Server Transfer Protocol
+    Send and receive files over rednet
+]]
+
 peripheral.find("modem", rednet.open)
 
 if not rednet.isOpen() then
