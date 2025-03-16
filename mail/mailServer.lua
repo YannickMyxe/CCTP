@@ -79,11 +79,11 @@ function mailserver.storeMail(email)
     if not mail.isValidEmail(email) then
         error("Invalid email format")
     end
-    local dir = mailserver.getInboxPath(email.recipient)
-    local fPath = dir .. email.subject .. ".mail"
-    fstp.CreateDir(dir)
-    fstp.CreateFile(fPath, mail.mailToFile(email))
-    print("Email saved at: " .. dir)
+
+    local fPath = mail.getInboxPath(email.recipient) .. email.sender .. "-" .. email.subject .. ".mail"
+    local tmp = mail.mailToFile(email)
+    fstp.MoveFileOverwrite(tmp, fPath)
+    print("Email saved: " .. fPath)
 end
 
 function mailserver.uploadMail(email)
@@ -112,11 +112,20 @@ function mailserver.sendMail(email)
 end
 
 function mailserver.receiveMail()
-    local path = fstp.RecieveFile(mail.temp)
-    local email = mail.fileToMail(path)
-    mailserver.storeMail(email)
+    local path, id = fstp.RecieveFile(mail.temp())
+    mailserver.storeFile(path)
+    mailserver.removeFile(path)
+    rednet.send(id, "Mail received")
+end
 
-    mail.printEmail(email)
+function mailserver.storeFile(file)
+    local email = mail.fileToMail(file)
+    mailserver.storeMail(email)
+end
+
+function mailserver.removeFile(file)
+    print("Removing file: " .. file)
+    fs.delete(file)
 end
 
 function mailserver.run()

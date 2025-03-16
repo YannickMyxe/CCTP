@@ -44,7 +44,7 @@ function fileTransfer.RecieveFile(path)
     file.close()
     print("File saved at: " .. dir)
 
-    return dir
+    return dir, id
 end
 
 function fileTransfer.CreateDir(dir)
@@ -73,6 +73,14 @@ end
 -- @return The extracted filename.
 function fileTransfer.extractFileName(path)
     return path:match("([^/\\]+)$")
+end
+
+function fileTransfer.MoveFileOverwrite(oldPath, newPath)
+    if fs.exists(newPath) then
+        fs.delete(newPath)
+    end
+
+    fs.move(oldPath, newPath)
 end
 
 return fileTransfer

@@ -10,11 +10,11 @@ local fstp = require("fstp") or error("Could not load fstp library")
 local MailingLib = {}
 
 MailingLib.root         = "/home/"
-MailingLib.dir          = MailingLib.root   .. "mail/"
+MailingLib.dir          = function() return MailingLib.root .. "mail/" end
 MailingLib.inbox        = "inbox/"
-MailingLib.configDir    = MailingLib.dir    .. ".config/"
+MailingLib.configDir    = function() return MailingLib.dir()  .. ".config/" end
 MailingLib.tagDir       = ".tags/"
-MailingLib.temp         = MailingLib.dir    .. "temp/"
+MailingLib.temp         = function() return MailingLib.dir()  .. "temp/" end
 
 MailingLib.serverID = nil
 
@@ -26,6 +26,7 @@ MailingLib.EmailStates = {
 -- Function to change the root directory
 function MailingLib.setRoot(newRootPath)
     MailingLib.root = newRootPath
+    print("Root directory changed to: " .. newRootPath)
 end
 
 -- Setup an Id for the client to send the mails to
@@ -67,27 +68,28 @@ end
 
 -- Function to validate an email object
 function MailingLib.isValidEmail(email)
+    local err = nil
     if not email then
-        error("Email object is nil")
+        err = "Email object is nil"
     elseif type(email) ~= "table" then
-        error("Email object is not a table")
+        err = "Email object is not a table"
     elseif not email.sender then
-        error("Email object does not have a sender")
+        err = "Email object does not have a sender"
     elseif not email.recipient then
-        error("Email object does not have a recipient")
+        err = "Email object does not have a recipient"
     elseif not email.subject then
-        error("Email object does not have a subject")
+        err = "Email object does not have a subject"
     elseif not email.body then
-        error("Email object does not have a body")
+        err = "Email object does not have a body"
     end
-    return true
+    return err
 end
 
 function MailingLib.getInboxPath(user)
     if not user then
         user = MailingLib.getName()
     end
-    return MailingLib.dir .. user .. MailingLib.inbox
+    return MailingLib.dir() .. user .. "/" .. MailingLib.inbox
 end
 
 function MailingLib.inboxExists(user)
@@ -110,10 +112,13 @@ end
 
 -- Function to send an email
 function MailingLib.sendEmail(email)
-    if MailingLib.isValidEmail(email) then
-        local path = MailingLib.mailToFile(email)
-        fstp.SendFile(path, MailingLib.serverID)
+    local err = MailingLib.isValidEmail(email)
+    if err then
+        error("Invalid email format: " .. err)
     end
+    local path = MailingLib.mailToFile(email)
+    fstp.SendFile(path, MailingLib.serverID)
+
 end
 
 -- Function to print an email
@@ -128,14 +133,15 @@ end
 
 -- Function to save an email
 function MailingLib.saveEmail(email)
-    if not MailingLib.isValidEmail(email) then
-        error("Invalid email format")
+    local mailErr = MailingLib.isValidEmail(email)
+    if not mailErr then
+        error("Invalid email format: " .. mailErr)
     end
-    local inbox = MailingLib.getInboxPath()
+    local inbox = MailingLib.getInboxPath(email.recipient)
     local fPath = inbox .. email.sender .. "-" .. email.subject .. ".mail"
     fstp.CreateDir(inbox)
     fstp.CreateFile(fPath, email.body)
-    print("Email saved at: " .. fPath)
+    -- print("Email saved at: " .. fPath)
     return fPath
 end
 
@@ -144,10 +150,10 @@ end
     @return boolean True if the config was made, false if it already existed.
 ]]
 function MailingLib.createConfig()
-    if not fs.exists(MailingLib.configDir) then
-        fstp.CreateDir(MailingLib.configDir)
+    if not fs.exists(MailingLib.configDir()) then
+        fstp.CreateDir(MailingLib.configDir())
         -- Setup the clientID
-        mail.addConfig("clientID", os.getComputerID())
+        MailingLib.addConfig("clientID", os.getComputerID())
         return true
     end
     return false
@@ -155,7 +161,7 @@ end
 
 function MailingLib.addConfig(name, value)
     MailingLib.createConfig()
-    local dir = MailingLib.configDir .. name
+    local dir = MailingLib.configDir() .. name
     fstp.CreateFile(dir)
     local file = fs.open(dir, "w") or error("File `" .. dir .. "` not found")
     file.write(value)
@@ -163,34 +169,34 @@ function MailingLib.addConfig(name, value)
 end
 
 function MailingLib.changeConfig(name, value) 
-    if not fs.exists(MailingLib.configDir .. name) then
+    if not fs.exists(MailingLib.configDir() .. name) then
         return nil
     end
-    local file = fs.open(MailingLib.configDir .. name, "w") or error("File `" .. MailingLib.configDir .. name .. "` not found")
+    local file = fs.open(MailingLib.configDir() .. name, "w") or error("File `" .. MailingLib.configDir() .. name .. "` not found")
     file.write(value)
     file.close()
 end
 
 function MailingLib.getConfigValue(name)
-    if not fs.exists(MailingLib.configDir .. name) then
+    if not fs.exists(MailingLib.configDir() .. name) then
         return nil
     end
-    local file = fs.open(MailingLib.configDir .. name, "r") or error("File `" .. MailingLib.configDir .. name .. "` not found")
+    local file = fs.open(MailingLib.configDir() .. name, "r") or error("File `" .. MailingLib.configDir() .. name .. "` not found")
     local value = file.readAll()
     file.close()
     return value
 end
 
 function MailingLib.setName(name)
-    if not fs.exists(MailingLib.configDir .. "name") then
+    if not fs.exists(MailingLib.configDir() .. "name") then
         MailingLib.createConfig()
     end
     MailingLib.addConfig("name", name)
 end
 
 function MailingLib.getConfig()
-    print("Loading config ... " .. MailingLib.configDir)
-    local files = fstp.ListDir(MailingLib.configDir)
+    print("Loading config ... " .. MailingLib.configDir())
+    local files = fstp.ListDir(MailingLib.configDir())
 
     if #files == 0 then
         print("No files found in config directory")
@@ -198,7 +204,7 @@ function MailingLib.getConfig()
     end
 
     for _, file in ipairs(files) do
-        local f = fs.open(MailingLib.configDir .. file, "r") or error("File `" .. MailingLib.configDir .. file .. "` not found")
+        local f = fs.open(MailingLib.configDir() .. file, "r") or error("File `" .. MailingLib.configDir() .. file .. "` not found")
         local value = f.readAll()
         print(file .. ": "  .. value)
         f.close()
@@ -252,9 +258,11 @@ function MailingLib.setUnread(path)
 end
 
 function MailingLib.mailToFile(email)
-   
+    if not MailingLib.isValidEmail(email) then
+        error("Invalid email format")
+    end
 
-    local tempDir = MailingLib.temp
+    local tempDir = MailingLib.temp()
     local fPath = tempDir .. email.subject .. ".mail"
     fstp.CreateDir(tempDir)
     local file = fs.open(fPath, "w") or error("Could not create/write to file "  .. fPath)
@@ -263,19 +271,21 @@ function MailingLib.mailToFile(email)
     file.write(email.subject .. "\n")
     file.write(email.body)
     file.close()
-    print("Transfored E-mail `" .. email.subject .. "` to file: " .. fPath)
+
+    -- print("Transfored E-mail `" .. email.subject .. "` to file: " .. fPath)
+
     return fPath
 end
 
 function MailingLib.fileToMail(filePath)
-        local file = fs.open(filePath, "r") or error("File `" .. filePath .. "` not found")
+    local file = fs.open(filePath, "r") or error("File `" .. filePath .. "` not found")
     local sender = file.readLine()
     local recipient = file.readLine()
     local subject = file.readLine()
     local body = file.readAll()
     file.close()
 
-    print("Transformed file " .. filePath .. " to E-mail.")
+    --print("Transformed file " .. filePath .. " to E-mail.")
 
     return MailingLib.newMailObject(sender, recipient, subject, body)
 end

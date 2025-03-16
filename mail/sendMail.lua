@@ -29,3 +29,10 @@ end
 local email = mail.newEmail(recipient, subject, body)
 
 mail.sendEmail(email)
+
+local id, message
+repeat
+    id, message = rednet.receive()
+until id == mail.serverID
+
+print("Mailserver> " .. message)
