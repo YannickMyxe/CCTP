@@ -76,8 +76,9 @@ function mailserver.setup()
 end
 
 function mailserver.storeMail(email)
-    if not mail.isValidEmail(email) then
-        error("Invalid email format")
+    local err = mail.isValidEmail(email)
+    if err then
+        error("Invalid email format: " .. err)
     end
 
     local fPath = mail.getInboxPath(email.recipient) .. email.sender .. "-" .. email.subject .. ".mail"
@@ -87,14 +88,14 @@ function mailserver.storeMail(email)
 end
 
 function mailserver.uploadMail(email)
-    if mail.isValidEmail(email) then
-        if not mailserver.inboxExists(email.recipient) then
-            error("Recipient does not have a mailbox")
-        end
-        mailserver.storeMail(email)
-    else
-        error("Invalid email format")
+    local err = mail.isValidEmail(email)
+    if err then
+        error("Invalid email format: " .. err)
+    end 
+    if not mailserver.inboxExists(email.recipient) then
+        error("Recipient does not have a mailbox")
     end
+    mailserver.storeMail(email)
 end
 
 function mailserver.getRednetID(userName)

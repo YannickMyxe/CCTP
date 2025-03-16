@@ -257,8 +257,10 @@ function MailingLib.setUnread(path)
 end
 
 function MailingLib.mailToFile(email)
-    if not MailingLib.isValidEmail(email) then
-        error("Invalid email format")
+    local err = MailingLib.isValidEmail(email)
+
+    if err then
+        error("Invalid email format: " .. err)
     end
 
     local tempDir = MailingLib.temp()
