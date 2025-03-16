@@ -2,6 +2,7 @@ local mail = require "lib" or error("Could not load mail library")
 
 package.path = '../?.lua;' .. package.path
 local fstp = require("fstp") or error("Could not load fstp library")
+local mmp = require("mmp") or error("Could not load mmp library")
 
 local mailserver = {}
 
@@ -116,7 +117,8 @@ function mailserver.receiveMail()
     local path, id = fstp.RecieveFile(mail.temp())
     mailserver.storeFile(path)
     mailserver.removeFile(path)
-    rednet.send(id, "Mail received")
+    mmp.server.send("Mail received", id)
+    -- rednet.send(id, "Mail received")
 end
 
 function mailserver.storeFile(file)
