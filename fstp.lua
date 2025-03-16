@@ -1,6 +1,6 @@
 --[[
     File-Server Transfer Protocol
-    Send and receive files over rednet
+    Send and receive files over Modem Message Protocol 
 ]]
 
 local mmp = require "mmp" or error("Could not load mmp library")
