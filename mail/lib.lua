@@ -118,7 +118,6 @@ function MailingLib.sendEmail(email)
     end
     local path = MailingLib.mailToFile(email)
     fstp.SendFile(path, MailingLib.serverID)
-
 end
 
 -- Function to print an email

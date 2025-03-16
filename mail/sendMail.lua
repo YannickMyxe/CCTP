@@ -29,10 +29,11 @@ end
 local email = mail.newEmail(recipient, subject, body)
 
 mail.sendEmail(email)
+print("Waiting for response from mail server...")
 
-local id, message
-repeat
-    id, message = rednet.receive()
-until id == mail.serverID
-
-print("Mailserver> " .. message)
+local id, message = rednet.receive(nil, 5)
+if not id then
+    printError("Did not receive a response from the mail server")
+else
+    print("Mailserver> " .. message)
+end
