@@ -58,6 +58,7 @@ end
 
 -- Function to create a new email
 function MailingLib.newEmail(recipient, subject, body)
+    subject = subject:gsub(" ", "-")
     return {
         sender = MailingLib.getName(),
         recipient = recipient,
