@@ -3,48 +3,44 @@
     Send and receive files over rednet
 ]]
 
-peripheral.find("modem", rednet.open)
-
-if not rednet.isOpen() then
-    error("Rednet is not open")
-end
-
+local mmp = require "mmp" or error("Could not load mmp library")
 
 local fileTransfer = {}
 
--- Sends a file to a specified receiver over Rednet.
--- @param file The path to the file to be sent.
--- @param reciever The ID of the receiver to send the file to.
--- @throws Error if the file cannot be found or opened.
--- @usage
--- fileTransfer.SendFile("example.txt", 5)
+fileTransfer.ports = {
+    client = 450,
+    server = 451,
+}
+
 function fileTransfer.SendFile(file, reciever)
     local f = fs.open(file, "r") or error("File `" .. file .. "` not found")
     local fData = f.readAll()
     f.close()
-    local data = { name = file, data = fData }
+    local data = { recieverId = reciever, name = file, data = fData }
     --[[
     for key, value in pairs(data) do
         print(key, value)
     end
     ]]
-    rednet.send(reciever, data)
+    -- (Channel, replyChannel, data)
+    mmp.client.send(data)
 end
 
-function fileTransfer.RecieveFile(path)
-    local id, file_data = rednet.receive()
-    print("File received from: #" .. id)
-    print("File name: " .. file_data.name)
+function fileTransfer.RecieveFile(newPath)
+    local data = mmp.server.recieve()
 
-    local filename = fileTransfer.extractFileName(file_data.name)
-    local dir = path .. filename
+    print("File received from: #" .. data.recieverId)
+    print("File name: " .. data.name)
+
+    local filename = fileTransfer.extractFileName(data.name)
+    local dir = newPath .. filename
     
     local file = fs.open(dir, "w")
-    file.write(file_data.data)
+    file.write(data.data)
     file.close()
     print("File saved at: " .. dir)
 
-    return dir, id
+    return dir, data.recieverId
 end
 
 function fileTransfer.CreateDir(dir)
