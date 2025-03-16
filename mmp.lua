@@ -12,9 +12,6 @@ mmp.ports = {
     server = 333,
 }
 
-modem.open(mmp.ports.client)
-modem.open(mmp.ports.server)
-
 function mmp.send(data, channel, replyChannel)
     print("Sending data ... on port " .. channel)
     modem.transmit(channel, replyChannel, data)
@@ -46,5 +43,21 @@ function mmp.server.recieve()
     return mmp.recieve(mmp.ports.client)
 end
 
+function mmp.openPorts()
+    modem.open(mmp.ports.client)
+    modem.open(mmp.ports.server)
+end
+
+function mmp.changePorts(client, server)
+    modem.close(mmp.ports.client)
+    modem.close(mmp.ports.server)
+
+    mmp.ports.client = client
+    mmp.ports.server = server
+
+    mmp.openPorts()
+end
+
+mmp.openPorts()
 
 return mmp
