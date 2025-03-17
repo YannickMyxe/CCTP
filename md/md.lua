@@ -1,3 +1,8 @@
+--[[
+    md.lua
+    A simple library for sending and recieving messages over a channel
+]]
+
 local port = 42
 local modem = peripheral.find("modem") or error("Cannot find any modem", 0) -- modem
 

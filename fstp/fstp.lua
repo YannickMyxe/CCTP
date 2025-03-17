@@ -3,6 +3,7 @@
     Send and receive files over Modem Message Protocol 
 ]]
 
+package.path = '../?.lua;' .. package.path
 local mmp = require "mmp" or error("Could not load mmp library")
 
 local fileTransfer = {}

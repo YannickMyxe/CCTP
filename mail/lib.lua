@@ -3,7 +3,6 @@
     A generic library for both client and server
 ]]
 
-
 package.path = '../?.lua;' .. package.path
 local fstp = require("fstp") or error("Could not load fstp library")
 
