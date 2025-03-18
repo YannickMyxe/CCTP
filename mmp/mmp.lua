@@ -1,3 +1,4 @@
+local portimus = require "portimus.prime" or error("Could not load portimus library")
 local modem = peripheral.find("modem") or error("No modem attached", 0)
 if not modem then
     error("No modem attached", 0)
@@ -44,13 +45,13 @@ function mmp.server.recieve()
 end
 
 function mmp.openPorts()
-    modem.open(mmp.ports.client)
-    modem.open(mmp.ports.server)
+    portimus.open(mmp.ports.client)
+    portimus.open(mmp.ports.server)
 end
 
 function mmp.changePorts(client, server)
-    modem.close(mmp.ports.client)
-    modem.close(mmp.ports.server)
+    portimus.close(mmp.ports.client)
+    portimus.close(mmp.ports.server)
 
     mmp.ports.client = client
     mmp.ports.server = server
