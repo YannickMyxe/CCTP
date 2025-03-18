@@ -21,5 +21,5 @@ for _, port in pairs(ports) do
         return nil
     end
     print("Closing port " .. port)
-    portimus.open(port)
+    portimus.close(port)
 end
