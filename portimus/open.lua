@@ -10,8 +10,6 @@ if not ports then
     end
 end
 
-print("Type: ", type(ports))
-
 for _, port in pairs(ports) do
     port = tonumber(port)
     if not port then 
@@ -25,11 +23,3 @@ for _, port in pairs(ports) do
     print("Opening port " .. port)
     portimus.open(port)
 end
-
-
-
-
-
-local id = multishell.launch(_ENV, "/programs/cctp/portimus/show.lua")
-multishell.setTitle(id, "Portimus-"..id)
-multishell.setFocus(id)
