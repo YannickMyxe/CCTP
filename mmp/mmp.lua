@@ -51,6 +51,10 @@ function mmp.openPorts()
     portimus.open(mmp.ports.server)
 end
 
+--[[ 
+    Changes the ports for the client and server
+    Closes the current ports and opens the new ones 
+]]
 function mmp.changePorts(client, server)
     portimus.close(mmp.ports.client)
     portimus.close(mmp.ports.server)
