@@ -117,8 +117,7 @@ function mailserver.receiveMail()
     local path, id = fstp.RecieveFile(mail.temp())
     mailserver.storeFile(path)
     mailserver.removeFile(path)
-    mmp.server.send("Mail received", id)
-    -- rednet.send(id, "Mail received")
+    mmp.server.send("Mail received")
 end
 
 function mailserver.storeFile(file)
