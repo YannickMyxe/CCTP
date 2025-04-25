@@ -15,8 +15,11 @@ mmp.ports = {
     server = 333,
 }
 
+mmp.protocol = "mmp"
+
 function mmp.send(data, channel, replyChannel)
-    print("Sending data ... on port " .. channel)
+    print("Sending data ... on port " .. channel .. " via the " .. mmp.protocol .. " protocol")
+    local data = { protocol = mmp.protocol, data = data } 
     modem.transmit(channel, replyChannel, data)
 end
 
@@ -28,12 +31,12 @@ function mmp.server.send(data)
     mmp.send(data, mmp.ports.server, mmp.ports.client)
 end
 
-function mmp.recieve(channel, replyChannel)
+function mmp.recieve(channel)
     local event, side, pchannel, replyChannel, data, distance
     repeat
         print("Waiting for data ... on channel " .. channel)
         event, side, pchannel, replyChannel, data, distance = os.pullEvent("modem_message")
-    until pchannel == channel
+    until pchannel == channel and data.protocol == mmp.protocol
 
     return data
 end
@@ -63,6 +66,11 @@ function mmp.changePorts(client, server)
     mmp.ports.server = server
 
     mmp.openPorts()
+end
+
+function mmp.changeProtocol(newProtocol)
+    print("Protocol changed from "..mmp.protocol .. " to: " .. newProtocol)
+    mmp.protocol = newProtocol
 end
 
 mmp.openPorts()

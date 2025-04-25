@@ -9,6 +9,7 @@ local mmp = require "mmp" or error("Could not load mmp library")
 local fileTransfer = {}
 
 mmp.changePorts(844, 845)
+mmp.changeProtocol("fstp")
 
 function fileTransfer.SendFile(file, reciever)
     local f = fs.open(file, "r") or error("File `" .. file .. "` not found")
