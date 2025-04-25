@@ -1,3 +1,5 @@
+--# Mode Message Protocol
+
 local portimus = require "portimus.prime" or error("Could not load portimus library")
 local modem = peripheral.find("modem") or error("No modem attached", 0)
 if not modem then
