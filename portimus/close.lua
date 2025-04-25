@@ -1,5 +1,4 @@
 local portimus = require "prime" or error("Cannot find portimus lib, prime.lua")
-
 local ports = {table.unpack(arg, 2, -1)}
 
 if not ports then
@@ -11,15 +10,15 @@ if not ports then
 end
 
 for _, port in pairs(ports) do
-    port = tonumber(port)
-    if not port then 
+    local p = tonumber(port)
+    if not p then 
         printError("Invalid port provided, port needs to be a number.") 
         return nil
     end
-    if port < 0 then
+    if p < 0 then
         printError("Invalid port number, port needs to be bigger than 0.") 
         return nil
     end
-    print("Closing port " .. port)
-    portimus.close(port)
+    print("Closing port " .. p)
+    portimus.close(p)
 end
