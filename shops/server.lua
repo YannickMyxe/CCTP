@@ -2,11 +2,16 @@ package.path = '../?.lua;' .. package.path
 
 local lib = require("lib")
 local confi = require("confi.confi")
+local mmp = require("mmp.mmp")
 
 local server = {}
 local config = {}
 server.config = config
 config.path = "shops"
+config.ports = {
+    client = 1141,
+    server = 1142,
+}
 server.manager = lib.manager.new()
 
 function config.load()
@@ -27,9 +32,13 @@ function config.load()
     return config
 end
 
+function config.openPorts()
+    mmp.changePorts(config.ports.client, config.ports.server)
+end
+
 function server.run()
     local config = server.config.load()
-    
+    server.config.openPorts()
 end
 
 local function run()
