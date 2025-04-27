@@ -27,7 +27,8 @@ function drawer.fillBg(color)
     if not color then
         color = drawer.background_color
     end
-    paintutils.drawFilledBox(1, 1, drawer.sw, drawer.sh, color)
+    monitor.setBackgroundColor(color)
+    monitor.clear()
 end
 
 function drawer.setTextPos(text, pos)
@@ -46,12 +47,9 @@ function drawer.setText(text, x, y)
     return drawer.setTextPos(text, {x = x, y = y})
 end
 
-function drawer.createMenuBar(items)
-    for i, item in ipairs(items) do
-        print("{", i, "}", "{", item, "}")
-    end
-end
+function drawer.createMenuBar()
 
+end
 
 drawer.setForegroundColor(drawer.foreground_color)
 
