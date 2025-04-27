@@ -9,9 +9,21 @@ if not shop_lib then
     return
 end
 
-local function printHelp()
+
+local function help_create() 
     print("Usage: create <name> <x> <y> <z>")
     print("Creates a new shop with the given name and coordinates.")
+end
+
+local function help_find() 
+    print("Usage: find <name>")
+    print("Finds a shop with the given name.")
+end
+
+
+local function printHelp()
+    help_create()
+    help_find()
 end
 
 local args = arg
@@ -27,7 +39,7 @@ if args[1] == "help" then
 elseif args[1] == "create" then
     if #args < 5 then
         printError("Not enough arguments!")
-        printHelp()
+        help_create()
         return nil
     end
 
@@ -38,7 +50,7 @@ elseif args[1] == "create" then
 
     if not name or not x or not y or not z then
         printError("Invalid arguments!")
-        printHelp()
+        help_create()
         return nil
     end
 
@@ -48,15 +60,14 @@ elseif args[1] == "create" then
 elseif args[1] == "find" then
     if #args < 2 then
         printError("Not enough arguments!")
-        printHelp()
+        help_find()
         return nil
     end
 
     local name = args[2]
-
     if not name then
         printError("Invalid arguments!")
-        printHelp()
+        help_find()
         return nil
     end
 
