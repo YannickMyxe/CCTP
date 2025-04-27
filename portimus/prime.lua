@@ -89,7 +89,7 @@ function portimus.close(port)
     end
     local isopen = portimus.isOpen(port)
     if not isopen then
-        printError("Port is already closed")
+        --printError("Port is already closed")
         return nil
     end
 
