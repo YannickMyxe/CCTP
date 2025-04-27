@@ -25,7 +25,7 @@ end
 function portimus.open(port)
     port = portimus.isValidPort(port)
     if portimus.isOpen(port) then
-        printError("Port already open")
+        --printError("Port already open")
         return false
     end
     modem.open(port)
