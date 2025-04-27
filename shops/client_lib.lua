@@ -28,4 +28,17 @@ function client.send(data)
     mmp.client.send(data.data, data.message)
 end
 
+function client.receive()
+    local data = mmp.client.receive()
+    --[[
+    for k, v in pairs(data) do
+        if type(v) == "table" then
+            v = "table"
+        end
+        print(k .. ": " .. tostring(v))
+    end
+    --]]
+    return data
+end
+
 return client

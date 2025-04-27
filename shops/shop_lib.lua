@@ -26,8 +26,8 @@ function coord.checkType(co)
     return nil
 end
 
-function coord.print(coordinate)
-    print("x: ".. coordinate.x .. ", y: " .. coordinate.y .. ", z: " .. coordinate.z)
+function coord.toString(coordinate)
+    return "x: ".. coordinate.x .. ", y: " .. coordinate.y .. ", z: " .. coordinate.z
 end
 
 -- Item
@@ -97,8 +97,7 @@ function shop.checkType(isShopObj)
 end
 
 function shop.print(shop)
-    print("Shop Name: " .. shop.name)
-    coord.print(shop.coord)
+    print("Shop Name: " .. shop.name .. " | Coordinates: " .. coord.toString(shop.coord))
 end
 
 function shop.addItem(shop, item)
@@ -140,7 +139,7 @@ function manager.addShop(manager, shop)
     manager.shops[shop.name] = shop
 end
 
-function manager.findShop(name) 
+function manager.findShop(manager, name) 
     if not shop.isValidName(name) then
         printError("Shop name is not valid!")
         return nil

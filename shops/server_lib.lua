@@ -88,6 +88,20 @@ function server.matchMessage(message, data)
         local shop = lib.shop.new(data.name, data.coord)
         lib.manager.addShop(server.manager, shop)
         return "Created shop " .. shop.name .. " successfully!"
+    elseif message == "find" then
+        print("Finding shop...")
+        if not data.name then
+            printError("No name provided!")
+            return nil
+        end
+        local shop = lib.manager.findShop(server.manager, data.name)
+        if not shop then
+            printError("Shop not found!")
+            return nil
+        end
+        mmp.server.send(shop, "shop-found")
+
+        return "Found shop: " .. shop.name .. " at " .. lib.coord.toString(shop.coord)
     end
 
     printError("Invalid message: " .. message)
@@ -96,14 +110,15 @@ end
 
 function server.run()
     local config = server.config.load()
-
-    local data = mmp.server.recieve()
-    local result = server.handleMessageData(data)
-    if not result then
-        printError("Failed to handle message data!")
-        return nil
+    while true do
+        local data = mmp.server.recieve()
+        local result = server.handleMessageData(data)
+        if not result then
+            printError("Failed to handle message data!")
+            return nil
+        end
+        print("Result: " .. result)
     end
-    print("Result: " .. result)
 end
 
 server.config.openPorts()
