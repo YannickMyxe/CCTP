@@ -1,7 +1,13 @@
-local lib = require("lib")
+local lib = require("shop_lib")
+local client = require("client_lib")
 
 if not lib then
     error("Failed to load lib")
+    return
+end
+
+if not client then
+    error("Failed to load client")
     return
 end
 
@@ -44,3 +50,4 @@ if error then
     return nil
 end
 lib.shop.print(shop)
+client.send({ message = "create", data = shop })

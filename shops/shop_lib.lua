@@ -102,7 +102,7 @@ function shop.print(shop)
 end
 
 function shop.addItem(shop, item)
-    local valid_shop = shop.checkType(shop)
+    local valid_shop = lib.shop.checkType(shop)
     if not valid_shop then
         printError("Shop is not valid! {" .. valid_shop .. "}")
         return
@@ -127,9 +127,9 @@ function manager.new()
     return mg
 end
 
-function manager.addShop(shop) 
-    local valid_shop = shop.checkType(shop)
-    if not valid_shop then
+function manager.addShop(manager, shop) 
+    local valid_shop = lib.shop.checkType(shop)
+    if valid_shop then
         printError("Shop is not valid! {" .. valid_shop .. "}")
         return
     end
