@@ -1,4 +1,5 @@
 --# Mode Message Protocol
+package.path = '../?.lua;' .. package.path
 
 local portimus = require "portimus.prime" or error("Could not load portimus library")
 local modem = peripheral.find("modem") or error("No modem attached", 0)
@@ -17,18 +18,21 @@ mmp.ports = {
 
 mmp.protocol = "mmp"
 
-function mmp.send(data, channel, replyChannel)
+function mmp.send(data, message, channel, replyChannel)
     print("Sending data ... on port " .. channel .. " via the " .. mmp.protocol .. " protocol")
-    local data = { protocol = mmp.protocol, data = data } 
+    if not message then 
+        message = mmp.protocol
+    end
+    local data = { protocol = mmp.protocol, message = message, data = data } 
     modem.transmit(channel, replyChannel, data)
 end
 
-function mmp.client.send(data)
-    mmp.send(data, mmp.ports.client, mmp.ports.server)
+function mmp.client.send(data, message)
+    mmp.send(data, message, mmp.ports.client, mmp.ports.server)
 end
 
-function mmp.server.send(data)
-    mmp.send(data, mmp.ports.server, mmp.ports.client)
+function mmp.server.send(data, message)
+    mmp.send(data, message, mmp.ports.server, mmp.ports.client)
 end
 
 function mmp.recieve(channel)
