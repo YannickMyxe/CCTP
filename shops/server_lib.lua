@@ -111,7 +111,7 @@ end
 function server.run()
     local config = server.config.load()
     while true do
-        local data = mmp.server.recieve()
+        local data = mmp.server.receive()
         local result = server.handleMessageData(data)
         if not result then
             printError("Failed to handle message data!")
