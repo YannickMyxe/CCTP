@@ -77,6 +77,4 @@ function mmp.changeProtocol(newProtocol)
     mmp.protocol = newProtocol
 end
 
-mmp.openPorts()
-
 return mmp
