@@ -35,7 +35,7 @@ function mmp.server.send(data, message)
     mmp.send(data, message, mmp.ports.server, mmp.ports.client)
 end
 
-function mmp.recieve(channel)
+function mmp.receive(channel)
     local event, side, pchannel, replyChannel, data, distance
     repeat
         print("Waiting for data ... on channel " .. channel)
@@ -45,12 +45,12 @@ function mmp.recieve(channel)
     return data
 end
 
-function mmp.client.recieve()
-    return mmp.recieve(mmp.ports.server)
+function mmp.client.receive()
+    return mmp.receive(mmp.ports.server)
 end
 
-function mmp.server.recieve()
-    return mmp.recieve(mmp.ports.client)
+function mmp.server.receive()
+    return mmp.receive(mmp.ports.client)
 end
 
 function mmp.openPorts()
